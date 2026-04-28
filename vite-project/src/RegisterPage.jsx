@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { useApp } from './context/AppContext';
+import { useApp, API_BASE } from './context/AppContext';
 
 const RegisterPage = () => {
   const [fullName, setFullName] = useState('');
@@ -23,7 +23,7 @@ const RegisterPage = () => {
     setLoading(true);
     setError('');
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post(`${API_BASE}/auth/register`, {
         fullName,
         email,
         password,

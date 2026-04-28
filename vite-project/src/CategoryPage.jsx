@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { SlidersHorizontal, ChevronDown } from 'lucide-react';
 import axios from 'axios';
 import ProductCard from './ProductCard';
+import { API_BASE } from './context/AppContext';
 
 const filtersConfig = {
   categories: ['Jordan', 'Sandal, Sliders and Flipflop', 'Tennis', 'Lifestyle', 'Basketball', 'Training and Gym', 'Skateboarding', 'Walking', 'Athletics'],
@@ -35,7 +36,7 @@ const CategoryPage = () => {
   const fetchProducts = async (genderOverride = activeGender) => {
     setLoading(true);
     try {
-      let url = `http://localhost:5000/api/products?pageSize=40`;
+      let url = `${API_BASE}/products?pageSize=40`;
       if (categoryId && !['all', 'new', 'jordan', 'sale'].includes(categoryId)) {
         url += `&category=${categoryId}`;
       } else if (genderOverride) {

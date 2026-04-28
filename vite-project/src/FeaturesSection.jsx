@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import ProductCard from './ProductCard';
+import { API_BASE } from './context/AppContext';
 
 const FeaturesSection = () => {
   const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ const FeaturesSection = () => {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/products?pageSize=3');
+        const { data } = await axios.get(`${API_BASE}/products?pageSize=3`);
         setProducts(data.data);
       } catch (err) {
         console.error('Error fetching featured products:', err);

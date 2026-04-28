@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useApp } from './context/AppContext';
+import { useApp, API_BASE } from './context/AppContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -17,7 +17,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const { data } = await axios.get(`${API_BASE}/products/${id}`);
         setProduct(data.data);
         if (data.data.sizes?.length) setSelectedSize(data.data.sizes[0].size);
         if (data.data.colors?.length) setSelectedColor(data.data.colors[0].name);
@@ -33,7 +33,7 @@ const ProductDetail = () => {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5000/api/products/${id}/reviews`, {
+      await axios.post(`${API_BASE}/products/${id}/reviews`, {
         rating: reviewRating,
         comment: reviewComment
       });

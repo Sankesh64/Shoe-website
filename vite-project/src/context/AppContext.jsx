@@ -3,7 +3,10 @@ import axios from 'axios';
 
 const AppContext = createContext();
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api';
+
+// Export for use in other components
+export { API_BASE };
 
 // Configure axios for credentials
 axios.defaults.withCredentials = true;

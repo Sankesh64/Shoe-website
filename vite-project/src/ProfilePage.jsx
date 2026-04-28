@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useApp } from './context/AppContext';
+import { useApp, API_BASE } from './context/AppContext';
 
 const ProfilePage = () => {
   const { user, logout } = useApp();
@@ -11,7 +11,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/orders/myorders', { withCredentials: true });
+        const { data } = await axios.get(`${API_BASE}/orders/myorders`, { withCredentials: true });
         setOrders(data.data);
       } catch (err) {
         console.error('Error fetching orders:', err);
@@ -27,7 +27,7 @@ const ProfilePage = () => {
   const handleRetryPayment = async (order) => {
     setProcessingId(order._id);
     try {
-      const { data: rzpOrderResponse } = await axios.post(`http://localhost:5000/api/orders/${order._id}/razorpay`, {}, { withCredentials: true });
+      const { data: rzpOrderResponse } = await axios.post(`${API_BASE}/orders/${order._id}/razorpay`, {}, { withCredentials: true });
       const { id: rzpOrderId, amount, currency, keyId } = rzpOrderResponse.data;
 
       const options = {
@@ -39,7 +39,7 @@ const ProfilePage = () => {
         order_id: rzpOrderId,
         handler: async function (response) {
           try {
-            const verifyRes = await axios.post(`http://localhost:5000/api/orders/${order._id}/razorpay/verify`, {
+            const verifyRes = await axios.post(`${API_BASE}/orders/${order._id}/razorpay/verify`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature

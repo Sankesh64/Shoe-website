@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useApp } from './context/AppContext';
+import { useApp, API_BASE } from './context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminDashboard = () => {
@@ -71,7 +71,7 @@ const ProductAdmin = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/products?pageSize=100');
+      const { data } = await axios.get(`${API_BASE}/products?pageSize=100`);
       setProducts(data.data);
     } catch (err) {
       console.error(err);
@@ -83,7 +83,7 @@ const ProductAdmin = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/products/${id}`, { withCredentials: true });
+        await axios.delete(`${API_BASE}/products/${id}`, { withCredentials: true });
         setProducts(products.filter((p) => p._id !== id));
       } catch (err) {
         alert('Failed to delete product. Make sure you are logged in as admin.');
@@ -166,9 +166,9 @@ const ProductModal = ({ product, close, refresh }) => {
     e.preventDefault();
     try {
       if (product) {
-        await axios.put(`http://localhost:5000/api/products/${product._id}`, formData, { withCredentials: true });
+        await axios.put(`${API_BASE}/products/${product._id}`, formData, { withCredentials: true });
       } else {
-        await axios.post('http://localhost:5000/api/products', formData, { withCredentials: true });
+        await axios.post(`${API_BASE}/products`, formData, { withCredentials: true });
       }
       refresh();
       close();
@@ -262,7 +262,7 @@ const UserAdmin = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data } = await axios.get('http://localhost:5000/api/users');
+      const { data } = await axios.get(`${API_BASE}/users`);
       setUsers(data.data);
     };
     fetchUsers();
@@ -271,7 +271,7 @@ const UserAdmin = () => {
   const toggleAdmin = async (u) => {
     const newRole = u.role === 'admin' ? 'user' : 'admin';
     try {
-      await axios.put(`http://localhost:5000/api/users/${u._id}/role`, { role: newRole });
+      await axios.put(`${API_BASE}/users/${u._id}/role`, { role: newRole });
       setUsers(users.map(user => user._id === u._id ? {...user, role: newRole} : user));
     } catch (err) {
       alert('Error updating role');
@@ -330,7 +330,7 @@ const OrderAdmin = () => {
 
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/orders', { withCredentials: true });
+      const { data } = await axios.get(`${API_BASE}/orders`, { withCredentials: true });
       setOrders(data.data);
     } catch (err) {
       console.error(err);
@@ -342,7 +342,7 @@ const OrderAdmin = () => {
     
     setProcessingId(orderId);
     try {
-      await axios.post(`http://localhost:5000/api/orders/${orderId}/refund`, {}, { withCredentials: true });
+      await axios.post(`${API_BASE}/orders/${orderId}/refund`, {}, { withCredentials: true });
       alert("Refund initiated successfully");
       fetchOrders();
     } catch (err) {

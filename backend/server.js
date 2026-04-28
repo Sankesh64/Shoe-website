@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.NODE_ENV === 'production'
-      ? 'https://yourdomain.com'
+      ? (process.env.FRONTEND_URL || 'https://shoe-website-xi-ten.vercel.app')
       : 'http://localhost:5173',
     credentials: true,
   })

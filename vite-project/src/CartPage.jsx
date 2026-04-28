@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { useApp } from './context/AppContext';
+import { useApp, API_BASE } from './context/AppContext';
 
 const CartPage = () => {
   const { cart, removeFromCart, setCart, user } = useApp();
@@ -56,10 +56,10 @@ const CartPage = () => {
         totalPrice: total
       };
 
-      const { data: dbOrderResponse } = await axios.post('http://localhost:5000/api/orders', orderData, { withCredentials: true });
+      const { data: dbOrderResponse } = await axios.post(`${API_BASE}/orders`, orderData, { withCredentials: true });
       const orderId = dbOrderResponse.data._id;
 
-      const { data: rzpOrderResponse } = await axios.post(`http://localhost:5000/api/orders/${orderId}/razorpay`, {}, { withCredentials: true });
+      const { data: rzpOrderResponse } = await axios.post(`${API_BASE}/orders/${orderId}/razorpay`, {}, { withCredentials: true });
       const { id: rzpOrderId, amount, currency, keyId } = rzpOrderResponse.data;
 
       const options = {
@@ -71,7 +71,7 @@ const CartPage = () => {
         order_id: rzpOrderId,
         handler: async function (response) {
           try {
-            const verifyRes = await axios.post(`http://localhost:5000/api/orders/${orderId}/razorpay/verify`, {
+            const verifyRes = await axios.post(`${API_BASE}/orders/${orderId}/razorpay/verify`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature
